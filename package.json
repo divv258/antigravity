@@ -1,0 +1,10 @@
+{
+    "name": "quizsnap-monorepo",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "hono": "^4.6.20",
+        "groq-sdk": "^0.9.1",
+        "dotenv": "^16.4.7"
+    }
+}
