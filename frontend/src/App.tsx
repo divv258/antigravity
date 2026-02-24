@@ -9,10 +9,15 @@ export type AppView = 'home' | 'mcq' | 'flashcard';
 
 /** Fisher-Yates shuffle the options of every question and remap the answer letter. */
 function shuffleMCQ(questions: MCQItem[]): MCQItem[] {
+  if (!Array.isArray(questions)) return [];
   return questions.map((q) => {
+    if (!q.options || !Array.isArray(q.options) || q.options.length === 0) return q;
+
     // Find which option is currently correct (by letter index)
-    const correctIndex = q.answer.charCodeAt(0) - 65; // 'A'→0, 'B'→1 …
-    const correctText = q.options[correctIndex];
+    // Safely handle cases where q.answer might be missing or not a capital letter
+    const correctLetter = (q.answer || 'A').toUpperCase();
+    const correctIndex = correctLetter.charCodeAt(0) - 65;
+    const correctText = q.options[correctIndex] || q.options[0];
 
     // Shuffle a copy of the options array
     const shuffled = [...q.options];
@@ -23,7 +28,7 @@ function shuffleMCQ(questions: MCQItem[]): MCQItem[] {
 
     // Find where the correct option landed after shuffle
     const newIndex = shuffled.indexOf(correctText);
-    const newAnswer = String.fromCharCode(65 + newIndex); // back to 'A'–'D'
+    const newAnswer = String.fromCharCode(65 + (newIndex >= 0 ? newIndex : 0));
 
     return { ...q, options: shuffled, answer: newAnswer };
   });
@@ -35,7 +40,12 @@ export default function App() {
   const [flashData, setFlashData] = useState<FlashcardItem[]>([]);
 
   const handleMCQReady = (data: MCQItem[]) => {
-    setMcqData(shuffleMCQ(data)); // randomise option positions
+    if (!data || data.length === 0) {
+      alert("No questions could be generated from this page. Please try another image.");
+      setView('home');
+      return;
+    }
+    setMcqData(shuffleMCQ(data));
     setView('mcq');
   };
 

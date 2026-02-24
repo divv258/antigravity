@@ -28,8 +28,13 @@ interface FlashcardItem {
 }
 
 const MCQ_SYSTEM_PROMPT = `You are an expert educator. Given the text content of a textbook page, generate up to 15 multiple-choice questions.
-Return ONLY a valid JSON array with no extra text, markdown, or code fences. Each element must follow this exact schema:
-{"question":"string","options":["A. text","B. text","C. text","D. text"],"answer":"A"}
+Return ONLY a valid JSON object with a "questions" key containing an array. No extra text, markdown, or code fences.
+Example:
+{
+  "questions": [
+    {"question":"string","options":["A. text","B. text","C. text","D. text"],"answer":"A"}
+  ]
+}
 The "answer" field must be exactly one of: "A", "B", "C", or "D", matching the correct option.`;
 
 const FLASHCARD_SYSTEM_PROMPT = `You are an expert educator. Given the text content of a textbook page, generate concise flashcards for key concepts, terms, and facts.

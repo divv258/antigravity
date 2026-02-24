@@ -31,7 +31,19 @@ export default function MCQPage({ questions, onBack }: MCQPageProps) {
     const [finished, setFinished] = useState(false);
     const [reviewOpen, setReviewOpen] = useState(false);
 
+    if (!questions || questions.length === 0) {
+        return (
+            <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-grid">
+                <div className="glass p-8 text-center max-w-sm">
+                    <p className="text-slate-300 mb-6">Oops! No questions were found for this quiz.</p>
+                    <button className="btn-teal w-full" onClick={onBack}>Go Back Home</button>
+                </div>
+            </main>
+        );
+    }
+
     const q = questions[current];
+    if (!q) return null; // Safety check
     const chosen = answers[current];
     const isAnswered = chosen !== 'unanswered';
 
