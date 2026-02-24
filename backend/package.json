@@ -1,0 +1,22 @@
+{
+  "name": "quizsnap-backend",
+  "version": "1.0.0",
+  "description": "QuizSnap.ai backend — Hono + Groq AI",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "groq-sdk": "^0.9.1",
+    "hono": "^4.6.20",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
