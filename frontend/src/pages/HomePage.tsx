@@ -40,9 +40,20 @@ export default function HomePage({ onMCQReady, onFlashReady }: HomePageProps) {
             if (mode === 'mcq') onMCQReady(data as MCQItem[]);
             else onFlashReady(data as FlashcardItem[]);
         } catch (err: unknown) {
-            const msg = axios.isAxiosError(err)
-                ? (err.response?.data?.error ?? err.message)
-                : 'Something went wrong. Please try again.';
+            let msg = 'Something went wrong. Please try again.';
+            if (axios.isAxiosError(err)) {
+                const errorData = err.response?.data?.error;
+                if (typeof errorData === 'string') {
+                    msg = errorData;
+                } else if (errorData && typeof errorData === 'object') {
+                    // Handle { code, message } or similar objects
+                    msg = (errorData as any).message || JSON.stringify(errorData);
+                } else {
+                    msg = err.message;
+                }
+            } else if (err instanceof Error) {
+                msg = err.message;
+            }
             setErrorMsg(msg);
             setState('uploaded');
         }

@@ -9,11 +9,23 @@ const app = new Hono();
 app.use(
     '/*',
     cors({
-        origin: ['http://localhost:5173', 'http://localhost:4173'],
+        origin: (origin) => {
+            // Allow localhost and any vercel.app subdomain
+            if (!origin || origin.includes('localhost') || origin.endsWith('.vercel.app')) {
+                return origin;
+            }
+            return null;
+        },
         allowMethods: ['GET', 'POST', 'OPTIONS'],
         allowHeaders: ['Content-Type'],
     })
 );
+
+app.onError((err, c) => {
+    console.error('Global Error Handler:', err);
+    const message = err instanceof Error ? err.message : 'Internal Server Error';
+    return c.json({ error: message }, 500);
+});
 
 app.route('/api', generateRoute);
 
