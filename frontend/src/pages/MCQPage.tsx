@@ -223,7 +223,8 @@ export default function MCQPage({ questions, onBack }: MCQPageProps) {
 
                     {/* Options */}
                     <div className="space-y-3 mb-6">
-                        {q.options.map((opt, i) => {
+                        {(q.options || []).map((opt, i) => {
+                            if (!opt) return null;
                             const letter = String.fromCharCode(65 + i);
                             const isCorrect = letter === q.answer;
                             const isChosen = letter === chosen;
@@ -242,7 +243,7 @@ export default function MCQPage({ questions, onBack }: MCQPageProps) {
                                     aria-label={`Option ${letter}: ${opt}`}
                                 >
                                     <span className="font-bold mr-3 text-slate-500">{letter}.</span>
-                                    {opt.replace(/^[A-D]\.\s*/, '')}
+                                    {typeof opt === 'string' ? opt.replace(/^[A-D]\.\s*/, '') : 'Invalid Option'}
                                 </button>
                             );
                         })}
